@@ -1,76 +1,58 @@
-const {createUser, existingUser} = require("../model/userModel")
-const pool = require('../dataBase/db');
+const { createUser, existingUser } = require("../model/userModel");
 
-
-
-const addUser = async(req , res) =>{
-    try{
-        const{ name,email,password } = req.body;
-        if(!name || !email || !password) {
-            return res.json({
-                message: "field empty", 
-            });
-        }
-        const user = await createUser(name , email , password);
-        if (user){
-            res.json({
-                message : " Created successfully",
-                user: user,
-
-            });
-        }
+const addUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.json({
+        message: "field empty",
+      });
     }
-     catch(e){
-        res.json({
-            message :"Sorry unsuccessful",
-            e: e.message,
-        });
+    const user = await createUser(name, email, password);
+    if (user) {
+      res.json({
+        message: "Created Successfully",
+        user: user,
+      });
     }
+  } catch (e) {
+    res.json({
+      message: "unsuccessful",
+      e: e.message,
+    });
+  }
 };
 
-
-const login= async(req , res) =>{
-    try{
-        const{ email,password } = req.body;
-        if(!email || !password) {
-            return res.json({
-                message: "field empty",
-            });
-        }
-
-        const user = await existingUser(email);
-        if(!user){
-            return res.json({
-                message: "User not found",
-            });
-        }
-
-        if (user.password !== password){
-            return res.json({
-                message: "Incorrect password",
-            });
-        }
-
-        if (user.password === password){
-            return res.json({
-                message: "Login successful",
-            });
-        }
-
-        if (user){
-            res.json({
-                message : "Login successful",
-            });
-        }
-
-}
-
-        catch(e){
-            res.json({
-                message :"Sorry unsuccessful",
-                e: e.message,
-            });
-        }
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.json({
+        message: "field empty jjsjdsjd",
+      });
+    }
+    const user = await existingUser(email);
+    if (!user) {
+      return res.json({
+        message: "email is not registered",
+      });
+    }
+    if (user.password != password) {
+      return res.json({
+        message: "password doesnot matched",
+      });
+    }
+    if (user) {
+      res.json({
+        message: "login successful",
+        user: user,
+      });
+    }
+  } catch (e) {
+    res.json({
+      message: "not successful",
+      e: e.message,
+    });
+  }
 };
-
-module.exports = {addUser, login};
+module.exports = { addUser, login };
